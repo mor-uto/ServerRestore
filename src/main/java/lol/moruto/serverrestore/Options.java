@@ -10,19 +10,26 @@ public class Options {
 
     public static void init() {
         try (BufferedReader br = new BufferedReader(new FileReader("options.txt"))) {
-            StringBuilder sb = new StringBuilder();
-            String line = br.readLine();
+            String line;
+            while ((line = br.readLine()) != null) {
+                if (line.trim().isEmpty() || line.startsWith("#")) continue;
+                String[] parts = line.split("=", 2);
+                if (parts.length != 2) continue;
 
-            while (line != null) {
-                sb.append(line);
-                sb.append(System.lineSeparator());
-                line = br.readLine();
+                String key = parts[0].trim();
+                String value = parts[1].trim();
+
+                switch (key) {
+                    case "TOKEN":
+                        TOKEN = value;
+                        break;
+                    case "GUILDID":
+                        GUILDID = value;
+                        break;
+                }
             }
-
-            String[] parts = sb.toString().split("=");
-
-            System.out.println(line);
         } catch (IOException e) {
+            System.err.println("Failed to read options.txt");
             e.printStackTrace();
         }
     }

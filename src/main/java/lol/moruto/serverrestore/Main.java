@@ -9,6 +9,7 @@ public class Main {
     private static JDA jda;
 
     public static void main(String[] args) {
+        Options.init();
         JDALogger.setFallbackLoggerEnabled(false);
 
         try {
