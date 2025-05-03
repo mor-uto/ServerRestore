@@ -1,6 +1,7 @@
 package lol.moruto.serverrestore.command;
 
 import lol.moruto.serverrestore.command.impl.RestoreChannels;
+import lol.moruto.serverrestore.command.impl.RestorePredefinedMessages;
 import lol.moruto.serverrestore.command.impl.RestoreRoles;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
@@ -11,6 +12,7 @@ import java.util.List;
 public class CommandListener extends ListenerAdapter {
     private final List<RestoreOperation> operations = Arrays.asList(
             new RestoreChannels(),
+            new RestorePredefinedMessages(),
             new RestoreRoles()
     );
 
@@ -18,6 +20,7 @@ public class CommandListener extends ListenerAdapter {
     public void onSlashCommandInteraction(SlashCommandInteractionEvent event) {
         if (event.getName().equals("restore")) {
             operations.forEach(operation -> operation.execute(event));
+            event.reply("Restoring the server.").setEphemeral(true).queue();
         }
     }
 }

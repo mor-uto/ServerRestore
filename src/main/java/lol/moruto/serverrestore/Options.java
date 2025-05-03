@@ -1,36 +1,41 @@
 package lol.moruto.serverrestore;
 
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.IOException;
+import org.yaml.snakeyaml.Yaml;
+
+import java.io.InputStream;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.util.*;
 
 public class Options {
-    public static String TOKEN = "";
-    public static String GUILDID = "";
+
+    private static String token = "";
+    private static String guildId = "";
+
+    private static Map<String, Object> config = new HashMap<>();
 
     public static void init() {
-        try (BufferedReader br = new BufferedReader(new FileReader("options.txt"))) {
-            String line;
-            while ((line = br.readLine()) != null) {
-                if (line.trim().isEmpty() || line.startsWith("#")) continue;
-                String[] parts = line.split("=", 2);
-                if (parts.length != 2) continue;
+        try (InputStream input = Files.newInputStream(Paths.get("options.yml"))) {
+            config = new Yaml().load(input);
 
-                String key = parts[0].trim();
-                String value = parts[1].trim();
+            token = String.valueOf(config.getOrDefault("token", ""));
+            guildId = String.valueOf(config.getOrDefault("guildid", ""));
 
-                switch (key) {
-                    case "TOKEN":
-                        TOKEN = value;
-                        break;
-                    case "GUILDID":
-                        GUILDID = value;
-                        break;
-                }
-            }
-        } catch (IOException e) {
-            System.err.println("Failed to read options.txt");
+        } catch (Exception e) {
+            System.err.println("Failed to load options.yml");
             e.printStackTrace();
         }
+    }
+
+    public static Map<String, Object> getConfig() {
+        return config;
+    }
+
+    public static String getToken() {
+        return token;
+    }
+
+    public static String getGuildId() {
+        return guildId;
     }
 }

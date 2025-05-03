@@ -13,11 +13,11 @@ public class Main {
         JDALogger.setFallbackLoggerEnabled(false);
 
         try {
-            jda = JDABuilder.createLight(Options.TOKEN)
+            jda = JDABuilder.createLight(Options.getToken())
                     .addEventListeners(new CommandListener())
                     .build().awaitReady();
 
-            jda.getGuildById(Options.GUILDID).upsertCommand("restore", "Restores the server").queue();
+            jda.getGuildById(Options.getGuildId()).upsertCommand("restore", "Restores the server").queue();
             System.out.println("[ServerRestore] Finished Loading.");
         } catch (InterruptedException e) {
             e.printStackTrace();
